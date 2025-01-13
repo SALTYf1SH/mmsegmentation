@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os.path as osp
-
 import mmengine.fileio as fileio
 
 from mmseg.registry import DATASETS
@@ -9,24 +7,27 @@ from .basesegdataset import BaseSegDataset
 
 @DATASETS.register_module()
 class CrackDataset(BaseSegDataset):
-    """Pascal VOC dataset.
+    """STARE dataset.
 
-    Args:
-        split (str): Split txt file for Pascal VOC.
+    In segmentation map annotation for STARE, 0 stands for background, which is
+    included in 2 categories. ``reduce_zero_label`` is fixed to False. The
+    ``img_suffix`` is fixed to '.png' and ``seg_map_suffix`` is fixed to
+    '.ah.png'.
     """
     METAINFO = dict(
         classes=('background', 'crack'),
         palette=[[0, 0, 0], [128, 0, 0]])
 
     def __init__(self,
-                 ann_file,
                  img_suffix='.jpg',
                  seg_map_suffix='.png',
+                 reduce_zero_label=False,
                  **kwargs) -> None:
         super().__init__(
             img_suffix=img_suffix,
             seg_map_suffix=seg_map_suffix,
-            ann_file=ann_file,
+            reduce_zero_label=reduce_zero_label,
             **kwargs)
-        assert fileio.exists(self.data_prefix['img_path'],
-                             self.backend_args) and osp.isfile(self.ann_file)
+        assert fileio.exists(
+            self.data_prefix['img_path'], backend_args=self.backend_args)
+
