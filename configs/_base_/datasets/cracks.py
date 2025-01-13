@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'CrackDataset'
-data_root = '/kaggle/input/crackmini'
+data_root = '/workspace/data/mini_crack_dataset'
 img_scale = (448, 448)
 crop_size = (128, 128)
 train_pipeline = [
