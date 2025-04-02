@@ -29,7 +29,6 @@ model = dict(
         in_channels=[256, 512, 1024, 2048],
         strides=[4, 8, 16, 32],
         feat_channels=256,
-        out_channels=256,
         num_classes=num_classes,
         num_queries=100,
         num_transformer_feat_level=3,
