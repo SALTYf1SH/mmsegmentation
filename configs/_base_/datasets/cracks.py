@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'CrackDataset'
-data_root = '/workspace/data/mini_crack_dataset'
+data_root = '/workspace/data'
 img_scale = (448, 448)
 crop_size = (128, 128)
 train_pipeline = [
@@ -52,8 +52,8 @@ train_dataloader = dict(
             type=dataset_type,
             data_root=data_root,
             data_prefix=dict(
-                img_path='img_dir/train',
-                seg_map_path='ann_dir/train'),
+                img_path='img_dir/test',
+                seg_map_path='ann_dir/test'),
             pipeline=train_pipeline)))
 val_dataloader = dict(
     batch_size=1,
@@ -64,8 +64,8 @@ val_dataloader = dict(
         type=dataset_type,
         data_root=data_root,
         data_prefix=dict(
-            img_path='img_dir/val',
-            seg_map_path='ann_dir/val'),
+            img_path='img_dir/test',
+            seg_map_path='ann_dir/test'),
         pipeline=test_pipeline))
 test_dataloader = val_dataloader
 

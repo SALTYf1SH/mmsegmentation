@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/models/upernet_swin.py', '../_base_/datasets/segcracks.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_40k.py'
 ]
-crop_size = (769, 769)
+crop_size = (384, 384)
 norm_cfg = dict(type='BN', requires_grad=True)
 data_preprocessor = dict(
     size=crop_size,

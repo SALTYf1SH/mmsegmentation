@@ -330,10 +330,6 @@ class RecWithAttnbias(nn.Module):
         self.cross_attn = cross_attn
         self.num_layers = num_layers
         self.num_heads = num_heads
-        if sos_token_format in ['learnable_token', 'pos_embedding']:
-            self.sos_token = nn.Parameter(
-                torch.randn(sos_token_num, 1, self.proj.shape[0]))
-            self.frozen.append('sos_token')
 
         layers = []
         for i in range(num_layers):
@@ -356,6 +352,11 @@ class RecWithAttnbias(nn.Module):
         self.ln_post = build_norm_layer(norm_cfg, embed_dims)[1]
         self.proj = nn.Linear(embed_dims, out_dims, bias=False)
 
+        # 在proj定义之后初始化sos_token
+        if self.sos_token_format in ['learnable_token', 'pos_embedding']:
+            self.sos_token = nn.Parameter(
+                torch.randn(self.sos_token_num, 1, out_dims))
+
         self.final_norm = final_norm
         self._freeze()
 
@@ -365,7 +366,15 @@ class RecWithAttnbias(nn.Module):
         if rec_state_dict is not None:
             load_state_dict(self, rec_state_dict, strict=False, logger=None)
         else:
-            super().init_weights()
+            # 手动初始化权重，因为nn.Module没有init_weights方法
+            for m in self.modules():
+                if isinstance(m, nn.Linear):
+                    nn.init.xavier_uniform_(m.weight)
+                    if m.bias is not None:
+                        nn.init.constant_(m.bias, 0)
+                elif isinstance(m, nn.LayerNorm):
+                    nn.init.constant_(m.bias, 0)
+                    nn.init.constant_(m.weight, 1.0)
 
     def _freeze(self):
         if 'all' in self.frozen_exclude:
